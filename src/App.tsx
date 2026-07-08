@@ -25,4 +25,22 @@ export default function App() {
       </AuthProvider>
     </BrowserRouter>
   );
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          {/* Rutas protegidas: usan <Outlet /> dentro de ProtectedRoute */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Route>
+          {/* Raíz → dashboard (si no autenticado, ProtectedRoute va a /login)
+           */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* Cualquier ruta desconocida → login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
