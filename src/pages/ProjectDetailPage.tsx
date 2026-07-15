@@ -6,6 +6,8 @@ import type { Project, Task, TaskStatus } from '../types';
 import { KANBAN_COLUMNS } from '../config/kanban';
 import { KanbanColumn } from '../components/KanbanColumn';
 import { CreateTaskModal } from '../components/CreateTaskModal';
+import { EditTaskModal } from '../components/EditTaskModal';
+import { TaskCommentsModal } from '../components/TaskCommentsModal';
 
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -30,8 +32,8 @@ export default function ProjectDetailPage() {
         projectsService.getById(id),
         tasksService.getByProject(id),
       ]);
-      setProject(proj ?? null);
-      setTasks(Array.isArray(taskList) ? taskList : []);
+      setProject(proj);
+      setTasks(taskList);
     } catch {
       setError('No se pudo cargar el proyecto');
     } finally {
@@ -39,6 +41,7 @@ export default function ProjectDetailPage() {
     }
   }, [id]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadData(); }, [loadData]);
 
   const handleStatusChange = async (taskId: string, newStatus: TaskStatus) => {
@@ -164,6 +167,20 @@ export default function ProjectDetailPage() {
         />
       )}
 
+      {showEditModal && editingTask && (
+        <EditTaskModal
+          task={editingTask}
+          onUpdated={handleTaskUpdated}
+          onClose={() => { setShowEditModal(false); setEditingTask(null); }}
+        />
+      )}
+
+      {showCommentsModal && commentingTask && (
+        <TaskCommentsModal
+          task={commentingTask}
+          onClose={() => { setShowCommentsModal(false); setCommentingTask(null); }}
+        />
+      )}
     </div>
   );
 }

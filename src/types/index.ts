@@ -74,3 +74,17 @@ export interface UpdateTaskData {
   status?: TaskStatus;
   assignedTo?: string | null;
 }
+
+export interface Comment {
+  id: string;
+  content: string;
+  taskId: string;
+  userId: string;
+  createdAt: string;
+  user?: Pick<User, 'id' | 'name' | 'email'>;
+}
+
+export interface CreateCommentData {
+  content: string;
+  taskId: string;
+}
